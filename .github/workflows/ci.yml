@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: e2e-tests-results
-          path: DCIM/
+          path: output/
