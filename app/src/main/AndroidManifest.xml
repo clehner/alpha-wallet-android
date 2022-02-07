@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <uses-feature
         android:name="android.hardware.fingerprint"
@@ -148,6 +149,11 @@
 
         <service
             android:name=".service.WalletConnectService"
+            android:enabled="true">
+        </service>
+
+        <service
+            android:name=".service.WalletConnectV2Service"
             android:enabled="true">
         </service>
 
