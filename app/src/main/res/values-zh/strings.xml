@@ -858,4 +858,5 @@
     <string name="reload_metadata">Reload Metadata</string>
     <string name="testnet">Testnet</string>
     <string name="website_text">Website</string>
+    <string name="wc_methods">方法</string>
 </resources>
