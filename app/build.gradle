@@ -224,7 +224,7 @@ dependencies {
     //Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
-    implementation 'com.github.WalletConnect:WalletConnectKotlinV2:1.0.0-beta02'
+    implementation 'com.github.WalletConnect:WalletConnectKotlinV2:1.0.0-beta03'
 }
 
 // WARNING WARNING WARNING
