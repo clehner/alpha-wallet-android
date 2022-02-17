@@ -859,4 +859,5 @@
     <string name="testnet">Testnet</string>
     <string name="website_text">Website</string>
     <string name="wc_methods">Métodos</string>
+    <string name="wc_card_subtitle">Conexiones activas a Dapp basado en navegador</string>
 </resources>

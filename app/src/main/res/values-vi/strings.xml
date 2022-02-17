@@ -878,4 +878,5 @@
     <string name="reload_metadata">Reload Metadata</string>
     <string name="website_text">Website</string>
     <string name="wc_methods">Phương pháp</string>
+    <string name="wc_card_subtitle">Kết nối đang hoạt động với Dapp dựa trên trình duyệt</string>
 </resources>

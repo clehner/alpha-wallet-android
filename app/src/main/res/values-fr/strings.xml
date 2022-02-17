@@ -876,4 +876,5 @@
     <string name="reload_metadata">Reload Metadata</string>
     <string name="website_text">Website</string>
     <string name="wc_methods">Méthodes</string>
+    <string name="wc_card_subtitle">Connexions actives à Dapp basé sur un navigateur</string>
 </resources>

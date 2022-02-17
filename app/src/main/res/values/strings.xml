@@ -896,4 +896,6 @@
     <string name="reload_metadata">Reload Metadata</string>
     <string name="website_text">Website</string>
     <string name="wc_methods">Methods</string>
+    <string name="wc_card_title" translatable="false">WalletConnect</string>
+    <string name="wc_card_subtitle">Active connection to browser-based Dapp</string>
 </resources>
