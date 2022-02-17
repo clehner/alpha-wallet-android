@@ -1,18 +1,6 @@
 package com.alphawallet.app.ui;
 
 
-import static android.app.Activity.RESULT_OK;
-import static com.alphawallet.app.C.CHANGED_LOCALE;
-import static com.alphawallet.app.C.CHANGE_CURRENCY;
-import static com.alphawallet.app.C.Key.WALLET;
-import static com.alphawallet.app.C.RESET_TOOLBAR;
-import static com.alphawallet.app.C.RESET_WALLET;
-import static com.alphawallet.app.C.SETTINGS_INSTANTIATED;
-import static com.alphawallet.app.entity.BackupOperationType.BACKUP_HD_KEY;
-import static com.alphawallet.app.entity.BackupOperationType.BACKUP_KEYSTORE_KEY;
-import static com.alphawallet.app.ui.HomeActivity.RESET_TOKEN_SERVICE;
-import static com.alphawallet.token.tools.TokenDefinition.TOKENSCRIPT_CURRENT_SCHEMA;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,12 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.alphawallet.app.BuildConfig;
 import com.alphawallet.app.C;
@@ -48,9 +30,23 @@ import com.alphawallet.app.widget.SettingsItemView;
 
 import java.util.Locale;
 
-import javax.inject.Inject;
-
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static android.app.Activity.RESULT_OK;
+import static com.alphawallet.app.C.CHANGED_LOCALE;
+import static com.alphawallet.app.C.CHANGE_CURRENCY;
+import static com.alphawallet.app.C.Key.WALLET;
+import static com.alphawallet.app.C.RESET_WALLET;
+import static com.alphawallet.app.C.SETTINGS_INSTANTIATED;
+import static com.alphawallet.app.entity.BackupOperationType.BACKUP_HD_KEY;
+import static com.alphawallet.app.entity.BackupOperationType.BACKUP_KEYSTORE_KEY;
+import static com.alphawallet.app.ui.HomeActivity.RESET_TOKEN_SERVICE;
+import static com.alphawallet.token.tools.TokenDefinition.TOKENSCRIPT_CURRENT_SCHEMA;
 
 @AndroidEntryPoint
 public class NewSettingsFragment extends BaseFragment {
@@ -536,7 +532,6 @@ public class NewSettingsFragment extends BaseFragment {
 
     private void onWalletConnectSettingClicked() {
         Intent intent = new Intent(getActivity(), WalletConnectSessionActivity.class);
-        intent.putExtra("wallet", wallet);
         startActivity(intent);
     }
 
