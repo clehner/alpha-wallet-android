@@ -51,6 +51,7 @@ import com.alphawallet.app.entity.WalletType;
 import com.alphawallet.app.entity.tokens.Token;
 import com.alphawallet.app.entity.tokens.TokenCardMeta;
 import com.alphawallet.app.interact.GenericWalletInteract;
+import com.alphawallet.app.interact.WalletConnectInteract;
 import com.alphawallet.app.repository.TokensRealmSource;
 import com.alphawallet.app.repository.entity.RealmToken;
 import com.alphawallet.app.service.TickerService;
@@ -59,7 +60,6 @@ import com.alphawallet.app.ui.widget.TokensAdapterCallback;
 import com.alphawallet.app.ui.widget.adapter.TokensAdapter;
 import com.alphawallet.app.ui.widget.entity.AvatarWriteCallback;
 import com.alphawallet.app.ui.widget.entity.WarningData;
-import com.alphawallet.app.ui.widget.holder.ManageTokensHolder;
 import com.alphawallet.app.ui.widget.holder.TokenGridHolder;
 import com.alphawallet.app.ui.widget.holder.TokenHolder;
 import com.alphawallet.app.ui.widget.holder.WarningHolder;
@@ -117,6 +117,9 @@ public class WalletFragment extends BaseFragment implements
     private RealmResults<RealmToken> realmUpdates;
     private LargeTitleView largeTitleView;
     private long realmUpdateTime;
+
+    @Inject
+    WalletConnectInteract walletConnectInteract;
 
     @Nullable
     @Override
@@ -511,7 +514,7 @@ public class WalletFragment extends BaseFragment implements
         {
             setRealmListener(realmUpdateTime);
         }
-        adapter.detectActiveWalletConnectSessions();
+        adapter.detectActiveWalletConnectSessions(walletConnectInteract.getSessionsCount());
     }
 
     /**

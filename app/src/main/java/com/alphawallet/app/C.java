@@ -265,4 +265,5 @@ public abstract class C {
     public static final String APP_NAME = "PACKAGE_NAME";
 
     public static final String ALPHAWALLET_LOGO_URI = "https://alphawallet.com/wp-content/themes/alphawallet/img/alphawallet-logo.svg";
+    public static final String WALLET_CONNECT_LOGO_URI = "https://walletconnect.com/favicon.ico";
 }
