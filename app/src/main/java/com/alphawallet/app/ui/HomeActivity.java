@@ -35,6 +35,7 @@ import com.alphawallet.app.entity.Wallet;
 import com.alphawallet.app.entity.WalletPage;
 import com.alphawallet.app.repository.EthereumNetworkRepository;
 import com.alphawallet.app.router.ImportTokenRouter;
+import com.alphawallet.app.service.AWWalletConnectClient;
 import com.alphawallet.app.service.NotificationService;
 import com.alphawallet.app.service.PriceAlertsService;
 import com.alphawallet.app.ui.widget.entity.PagerCallback;
@@ -58,6 +59,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -96,6 +99,9 @@ import static com.alphawallet.ethereum.EthereumNetworkBase.MAINNET_ID;
 public class HomeActivity extends BaseNavigationActivity implements View.OnClickListener, HomeCommsInterface,
         FragmentMessenger, Runnable, SignAuthenticationCallback, LifecycleObserver, PagerCallback
 {
+    @Inject
+    AWWalletConnectClient awWalletConnectClient;
+
     private HomeViewModel viewModel;
 
     private Dialog dialog;
@@ -299,6 +305,8 @@ public class HomeActivity extends BaseNavigationActivity implements View.OnClick
         
         Intent i = new Intent(this, PriceAlertsService.class);
         startService(i);
+
+        awWalletConnectClient.showNotification();
     }
 
     private void setupFragmentListeners()
