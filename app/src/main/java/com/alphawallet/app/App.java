@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.alphawallet.app.service.AWWalletConnectClient;
 import com.alphawallet.app.util.ReleaseTree;
 import com.walletconnect.walletconnectv2.client.WalletConnect;
 import com.walletconnect.walletconnectv2.client.WalletConnectClient;
 
 import java.util.Arrays;
 import java.util.Stack;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import dagger.hilt.android.HiltAndroidApp;
@@ -19,6 +22,9 @@ import timber.log.Timber;
 @HiltAndroidApp
 public class App extends Application
 {
+
+    @Inject
+    AWWalletConnectClient awWalletConnectClient;
 
     private static App mInstance;
     private Stack<Activity> activityStack = new Stack<>();
@@ -120,6 +126,8 @@ public class App extends Application
             Timber.tag("AlphaWallet").d("Init failed: %s", e.getMessage());
             return null;
         });
+
+        WalletConnectClient.INSTANCE.setWalletDelegate(awWalletConnectClient);
     }
 
     @Override
