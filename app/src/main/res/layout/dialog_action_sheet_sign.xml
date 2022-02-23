@@ -14,13 +14,13 @@
 
         <ImageView
             android:id="@+id/image_close"
-            android:contentDescription="@string/action_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp16"
-            android:padding="5dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp16"
             android:background="@color/transparent"
+            android:contentDescription="@string/action_close"
+            android:padding="5dp"
             android:src="@drawable/ic_close" />
 
         <TextView
@@ -55,6 +55,11 @@
         custom:label="@string/requester_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mercury" />
 
     <com.alphawallet.app.widget.SignDataWidget
         android:id="@+id/sign_widget"

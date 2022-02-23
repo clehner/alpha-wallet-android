@@ -87,4 +87,7 @@
         <attr name="text"/>
         <attr name="showActionText" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="SignDataWidget">
+        <attr name="noTitle" format="boolean" />
+    </declare-styleable>
 </resources>
