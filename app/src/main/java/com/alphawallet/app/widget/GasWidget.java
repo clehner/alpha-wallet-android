@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alphawallet.app.BuildConfig;
 import com.alphawallet.app.C;
 import com.alphawallet.app.R;
 import com.alphawallet.app.entity.GasPriceSpread;
@@ -19,6 +19,7 @@ import com.alphawallet.app.entity.tokens.Token;
 import com.alphawallet.app.repository.TokensRealmSource;
 import com.alphawallet.app.repository.entity.RealmGasSpread;
 import com.alphawallet.app.repository.entity.RealmTokenTicker;
+import com.alphawallet.app.service.AWWalletConnectClient;
 import com.alphawallet.app.service.GasService;
 import com.alphawallet.app.service.TickerService;
 import com.alphawallet.app.service.TokensService;
@@ -35,10 +36,8 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.Sort;
 import timber.log.Timber;
 
-import static com.alphawallet.app.C.DEFAULT_GAS_LIMIT_FOR_NONFUNGIBLE_TOKENS;
 import static com.alphawallet.app.C.DEFAULT_GAS_PRICE;
 import static com.alphawallet.app.C.GAS_LIMIT_MIN;
 import static com.alphawallet.ethereum.EthereumNetworkBase.MAINNET_ID;
@@ -73,6 +72,7 @@ public class GasWidget extends LinearLayout implements Runnable
     private int currentGasSpeedIndex = -1;
     private int customGasSpeedIndex = 0;
     private long customNonce = -1;
+    private OnGasSelectedCallback onGasSelectedCallback;
     private boolean isSendingAll;
     private boolean forceCustomGas;
     private BigInteger resendGasPrice = BigInteger.ZERO;
@@ -104,11 +104,32 @@ public class GasWidget extends LinearLayout implements Runnable
             intent.putExtra(C.EXTRA_GAS_PRICE, gasSpeeds.get(customGasSpeedIndex).gasPrice.toString());
             intent.putExtra(C.EXTRA_NONCE, customNonce);
             intent.putExtra(C.EXTRA_MIN_GAS_PRICE, resendGasPrice.longValue());
-            baseActivity.startActivityForResult(intent, C.SET_GAS_SETTINGS);
+            baseActivity.startActivity(intent);
         });
     }
 
-    public void setupWidget(TokensService svs, Token t, Web3Transaction tx, StandardFunctionInterface sfi, Activity act)
+    @Override
+    protected void onWindowVisibilityChanged(int visibility)
+    {
+        super.onWindowVisibilityChanged(visibility);
+        Log.d("seaborn", "visible: " + visibility);
+        if (visibility == VISIBLE && AWWalletConnectClient.data != null)
+        {
+            Intent data = AWWalletConnectClient.data;
+
+            int gasSelectionIndex = data.getIntExtra(C.EXTRA_SINGLE_ITEM, -1);
+            long customNonce = data.getLongExtra(C.EXTRA_NONCE, -1);
+            BigDecimal customGasPrice = data.hasExtra(C.EXTRA_GAS_PRICE) ?
+                    new BigDecimal(data.getStringExtra(C.EXTRA_GAS_PRICE)) : BigDecimal.ZERO; //may not have set a custom gas price
+            BigDecimal customGasLimit = new BigDecimal(data.getStringExtra(C.EXTRA_GAS_LIMIT));
+            long expectedTxTime = data.getLongExtra(C.EXTRA_AMOUNT, 0);
+
+            setCurrentGasIndex(gasSelectionIndex, customGasPrice, customGasLimit, expectedTxTime, customNonce);
+        }
+        AWWalletConnectClient.data = null;
+    }
+
+    public void setupWidget(TokensService svs, Token t, Web3Transaction tx, StandardFunctionInterface sfi, Activity act, OnGasSelectedCallback onGasSelectedCallback)
     {
         tokensService = svs;
         token = t;
@@ -120,6 +141,7 @@ public class GasWidget extends LinearLayout implements Runnable
         isSendingAll = isSendingAll(tx);
         initialGasPrice = tx.gasPrice;
         customNonce = tx.nonce;
+        this.onGasSelectedCallback = onGasSelectedCallback;
 
         if (tx.gasLimit.equals(BigInteger.ZERO)) //dapp didn't specify a limit, use default limits until node returns an estimate (see setGasEstimate())
         {

@@ -3,6 +3,7 @@ package com.alphawallet.app.widget;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -44,8 +45,6 @@ import java.util.List;
 import io.realm.Realm;
 
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by JB on 17/11/2020.
@@ -131,7 +130,7 @@ public class ActionSheetDialog extends BottomSheetDialog implements StandardFunc
         functionBar.setupFunctions(this, new ArrayList<>(Collections.singletonList(R.string.action_confirm)));
         functionBar.revealButtons();
 
-        gasWidget.setupWidget(ts, token, candidateTransaction, this, activity);
+        gasWidget.setupWidget(ts, token, candidateTransaction, this, activity, this::updateAmount);
         updateAmount();
 
         addressDetail.setupAddress(destAddress, destName, tokensService.getToken(token.tokenInfo.chainId, destAddress));
@@ -325,12 +324,6 @@ public class ActionSheetDialog extends BottomSheetDialog implements StandardFunc
         detailWidget.setupTransaction(candidateTransaction, token.tokenInfo.chainId, tokensService.getCurrentAddress(),
                 tokensService.getNetworkSymbol(token.tokenInfo.chainId), this);
         detailWidget.setVisibility(View.VISIBLE);
-    }
-
-    public void setCurrentGasIndex(int gasSelectionIndex, BigDecimal customGasPrice, BigDecimal customGasLimit, long expectedTxTime, long nonce)
-    {
-        gasWidget.setCurrentGasIndex(gasSelectionIndex, customGasPrice, customGasLimit, expectedTxTime, nonce);
-        updateAmount();
     }
 
     private boolean isSendingTransaction()
@@ -638,6 +631,7 @@ public class ActionSheetDialog extends BottomSheetDialog implements StandardFunc
             @Override
             public void gotAuthorisation(boolean gotAuth)
             {
+                Log.d("seaborn", "gotAuthorisation: " + gotAuth);
                 actionCompleted = true;
                 if (!gotAuth) { cancelAuthentication(); return; }
                 confirmationWidget.startProgressCycle(4);
@@ -722,4 +716,8 @@ public class ActionSheetDialog extends BottomSheetDialog implements StandardFunc
     public void updateChain(long chainId) {
         walletConnectRequestWidget.updateChain(chainId);
     }
+}
+
+interface OnGasSelectedCallback {
+    void onSelected();
 }

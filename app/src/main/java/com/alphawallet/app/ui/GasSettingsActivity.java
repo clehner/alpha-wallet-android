@@ -35,6 +35,7 @@ import com.alphawallet.app.repository.EthereumNetworkRepository;
 import com.alphawallet.app.repository.TokensRealmSource;
 import com.alphawallet.app.repository.entity.RealmGasSpread;
 import com.alphawallet.app.repository.entity.RealmTokenTicker;
+import com.alphawallet.app.service.AWWalletConnectClient;
 import com.alphawallet.app.service.TickerService;
 import com.alphawallet.app.ui.widget.divider.ListDivider;
 import com.alphawallet.app.ui.widget.entity.GasSettingsCallback;
@@ -219,7 +220,7 @@ public class GasSettingsActivity extends BaseActivity implements GasSettingsCall
         {
             result.putExtra(C.EXTRA_GAS_PRICE, gasSpeeds.get(customIndex).gasPrice.toString());
         }
-        setResult(RESULT_OK, result);
+        AWWalletConnectClient.data = result;
         finish();
     }
 
@@ -235,7 +236,13 @@ public class GasSettingsActivity extends BaseActivity implements GasSettingsCall
         if (realmGasSpread != null)
         {
             realmGasSpread.removeAllChangeListeners();
-            if (!realmGasSpread.getRealm().isClosed()) realmGasSpread.getRealm().close();
+            try
+            {
+                Realm realm = realmGasSpread.getRealm();
+                if (!realm.isClosed()) realm.close();
+            } catch (IllegalStateException ignored)
+            {
+            }
         }
     }
 
