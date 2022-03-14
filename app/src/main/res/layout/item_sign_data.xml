@@ -42,7 +42,7 @@
                 android:fontFamily="@font/font_regular"
                 android:gravity="start"
                 tools:text="Message:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337\nMessage:\n  Hi Alice!\nA number:\n 1337"
-                android:textSize="@dimen/sp16"/>
+                android:textSize="@dimen/sp12"/>
 
         </ScrollView>
 
