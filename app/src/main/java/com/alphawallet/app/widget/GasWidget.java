@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -72,7 +71,6 @@ public class GasWidget extends LinearLayout implements Runnable
     private int currentGasSpeedIndex = -1;
     private int customGasSpeedIndex = 0;
     private long customNonce = -1;
-    private OnGasSelectedCallback onGasSelectedCallback;
     private boolean isSendingAll;
     private boolean forceCustomGas;
     private BigInteger resendGasPrice = BigInteger.ZERO;
@@ -112,10 +110,9 @@ public class GasWidget extends LinearLayout implements Runnable
     protected void onWindowVisibilityChanged(int visibility)
     {
         super.onWindowVisibilityChanged(visibility);
-        Log.d("seaborn", "visible: " + visibility);
-        if (visibility == VISIBLE && AWWalletConnectClient.data != null)
+        if (visibility == VISIBLE && AWWalletConnectClient.gasData != null)
         {
-            Intent data = AWWalletConnectClient.data;
+            Intent data = AWWalletConnectClient.gasData;
 
             int gasSelectionIndex = data.getIntExtra(C.EXTRA_SINGLE_ITEM, -1);
             long customNonce = data.getLongExtra(C.EXTRA_NONCE, -1);
@@ -126,10 +123,10 @@ public class GasWidget extends LinearLayout implements Runnable
 
             setCurrentGasIndex(gasSelectionIndex, customGasPrice, customGasLimit, expectedTxTime, customNonce);
         }
-        AWWalletConnectClient.data = null;
+        AWWalletConnectClient.gasData = null;
     }
 
-    public void setupWidget(TokensService svs, Token t, Web3Transaction tx, StandardFunctionInterface sfi, Activity act, OnGasSelectedCallback onGasSelectedCallback)
+    public void setupWidget(TokensService svs, Token t, Web3Transaction tx, StandardFunctionInterface sfi, Activity act)
     {
         tokensService = svs;
         token = t;
@@ -141,7 +138,6 @@ public class GasWidget extends LinearLayout implements Runnable
         isSendingAll = isSendingAll(tx);
         initialGasPrice = tx.gasPrice;
         customNonce = tx.nonce;
-        this.onGasSelectedCallback = onGasSelectedCallback;
 
         if (tx.gasLimit.equals(BigInteger.ZERO)) //dapp didn't specify a limit, use default limits until node returns an estimate (see setGasEstimate())
         {
