@@ -5,6 +5,7 @@ import static com.alphawallet.app.C.WALLET_CONNECT_COUNT_CHANGE;
 import static com.alphawallet.app.C.WALLET_CONNECT_FAIL;
 import static com.alphawallet.app.C.WALLET_CONNECT_NEW_SESSION;
 import static com.alphawallet.app.C.WALLET_CONNECT_REQUEST;
+import static com.alphawallet.app.C.WALLET_CONNECT_SWITCH_CHAIN;
 
 import android.app.Service;
 import android.content.Intent;
@@ -20,6 +21,9 @@ import com.alphawallet.app.entity.WalletConnectActions;
 import com.alphawallet.app.entity.walletconnect.SignType;
 import com.alphawallet.app.entity.walletconnect.WCRequest;
 import com.alphawallet.app.walletconnect.WCClient;
+import com.alphawallet.app.walletconnect.WCSession;
+import com.alphawallet.app.walletconnect.entity.WCSessionRequest;
+import com.alphawallet.app.walletconnect.entity.WCSessionUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +90,21 @@ public class WalletConnectService extends Service
                 case MSG_PUMP:
                     Timber.tag(TAG).d("SERVICE MSG PUMP");
                     checkMessages();
+                    break;
+
+                case SWITCH_CHAIN:
+                    Timber.tag(TAG).d("SERVICE SWITCH CHAIN");
+                    long id = intent.getLongExtra("sessionId", -1);
+                    long chainId = intent.getLongExtra("chainId", -1);
+                    boolean approved = intent.getBooleanExtra("approved", false);
+                    if (id != -1 && chainId != -1) {
+                        WCClient c = clientMap.get(String.valueOf(id));
+                        if (c != null && c.isConnected()) {
+                            Timber.tag(TAG).d("sessionId: %s, chainId: %s, approved: %s", id, chainId, approved);
+                            c.switchChain(chainId, approved);
+                        }
+                    }
+
                     break;
             }
         }
@@ -276,6 +295,18 @@ public class WalletConnectService extends Service
             setLastUsed(client);
             WCRequest rq = new WCRequest(client.sessionId(), id, transaction, false, client.chainIdVal());
             sendRequest(client, rq);
+            return Unit.INSTANCE;
+        });
+
+        // TODO
+        client.setOnSwitchEthereumChain((id, chainId) -> {
+            Timber.tag(TAG).d("onSwitchEthereumChain: %s, %s", id, chainId);
+            // send broadcast to show dialog for switching chain
+            Intent i = new Intent(WALLET_CONNECT_SWITCH_CHAIN);
+            i.putExtra("sessionId", id);
+            i.putExtra("chainId", chainId);
+            i.putExtra("name", client.getPeerMeta().getName());
+            WalletConnectService.this.sendBroadcast(i);
             return Unit.INSTANCE;
         });
     }
