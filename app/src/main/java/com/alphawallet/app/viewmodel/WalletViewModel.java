@@ -25,6 +25,7 @@ import com.alphawallet.app.entity.WalletType;
 import com.alphawallet.app.entity.tokendata.TokenGroup;
 import com.alphawallet.app.entity.tokens.Token;
 import com.alphawallet.app.entity.tokens.TokenCardMeta;
+import com.alphawallet.app.entity.walletconnect.WalletConnectSessionItem;
 import com.alphawallet.app.interact.ChangeTokenEnableInteract;
 import com.alphawallet.app.interact.FetchTokensInteract;
 import com.alphawallet.app.interact.GenericWalletInteract;
@@ -33,6 +34,7 @@ import com.alphawallet.app.repository.PreferenceRepositoryType;
 import com.alphawallet.app.router.ManageWalletsRouter;
 import com.alphawallet.app.router.MyAddressRouter;
 import com.alphawallet.app.router.TokenDetailRouter;
+import com.alphawallet.app.service.AWWalletConnectClient;
 import com.alphawallet.app.service.AssetDefinitionService;
 import com.alphawallet.app.service.RealmManager;
 import com.alphawallet.app.service.TokensService;
@@ -46,6 +48,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -78,6 +81,7 @@ public class WalletViewModel extends BaseViewModel
     private long lastBackupCheck = 0;
     private BottomSheetDialog dialog;
     private final OnRampRepositoryType onRampRepository;
+    private AWWalletConnectClient awWalletConnectClient;
 
     @Inject
     WalletViewModel(
@@ -91,7 +95,7 @@ public class WalletViewModel extends BaseViewModel
             ManageWalletsRouter manageWalletsRouter,
             PreferenceRepositoryType preferenceRepository,
             RealmManager realmManager,
-            OnRampRepositoryType onRampRepository)
+            OnRampRepositoryType onRampRepository, AWWalletConnectClient awWalletConnectClient)
     {
         this.fetchTokensInteract = fetchTokensInteract;
         this.tokenDetailRouter = tokenDetailRouter;
@@ -104,6 +108,7 @@ public class WalletViewModel extends BaseViewModel
         this.preferenceRepository = preferenceRepository;
         this.realmManager = realmManager;
         this.onRampRepository = onRampRepository;
+        this.awWalletConnectClient = awWalletConnectClient;
     }
 
     public LiveData<TokenCardMeta[]> tokens() {
@@ -384,5 +389,10 @@ public class WalletViewModel extends BaseViewModel
         Intent intent = new Intent();
         intent.putExtra(C.DAPP_URL_LOAD, onRampRepository.getUri(address, null));
         return intent;
+    }
+
+    public MutableLiveData<List<WalletConnectSessionItem>> activeWalletConnectSessions()
+    {
+        return awWalletConnectClient.sessionItemMutableLiveData();
     }
 }
