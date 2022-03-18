@@ -29,6 +29,12 @@ licenses:
 before_install:
 - yes | sdkmanager "platforms;android-30"
 
+env:
+  - JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
+
+jdk:
+  - openjdk11
+
 install:
   - true
 
