@@ -4,16 +4,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
-
-import androidx.lifecycle.ViewModelProvider;
 
 import com.alphawallet.app.R;
 import com.alphawallet.app.entity.NetworkInfo;
 import com.alphawallet.app.entity.StandardFunctionInterface;
-import com.alphawallet.app.repository.EthereumNetworkRepositoryType;
 import com.alphawallet.app.viewmodel.CustomNetworkViewModel;
 import com.alphawallet.app.widget.FunctionButtonBar;
 import com.alphawallet.app.widget.InputView;
@@ -22,8 +18,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.inject.Inject;
-
+import androidx.lifecycle.ViewModelProvider;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -94,18 +89,10 @@ public class AddCustomRPCNetworkActivity extends BaseActivity implements Standar
             blockExplorerUrlInputView.setText(network.etherscanUrl);
             blockExplorerApiUrl.setText(network.etherscanAPI);
             testNetSwitch.setChecked(viewModel.isTestNetwork(network));
-            // disable editing for hardcoded networks
-            if (!network.isCustom) {
-                nameInputView.getEditText().setEnabled(false);
-                rpcUrlInputView.getEditText().setEnabled(false);
-                chainIdInputView.getEditText().setEnabled(false);
-                symbolInputView.getEditText().setEnabled(false);
-                blockExplorerUrlInputView.getEditText().setEnabled(false);
-                blockExplorerApiUrl.getEditText().setEnabled(false);
-                findViewById(R.id.view_click_hider).setVisibility(View.VISIBLE); //disable clicking on the switch
-            } else {
-                addFunctionBar(true);
-            }
+
+            chainIdInputView.getEditText().setEnabled(network.isCustom);
+
+            addFunctionBar(true);
         } else {
             addFunctionBar(false);
         }
